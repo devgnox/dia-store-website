@@ -40,3 +40,8 @@ export interface Image {
   id: string;
   url: string;
 }
+
+export interface ProductCart extends Product {
+  quantity: number;
+  variant:string
+}

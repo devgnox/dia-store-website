@@ -27,7 +27,7 @@ const CartPage = () => {
               )}
               <ul>
                 {cart.items.map((item) => (
-                  <CartItem key={item.id} data={item} />
+                  <CartItem key={item.variant} data={item} />
                 ))}
               </ul>
             </div>

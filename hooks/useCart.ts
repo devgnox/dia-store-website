@@ -1,12 +1,12 @@
-import { Product } from "@/types";
+import { Product, ProductCart } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface ICartStore {
-  items: Product[];
+  items: ProductCart[];
   addItem: (data: Product) => void;
-  removeItem: (id: string) => void;
+  removeItem: (id: string, variant:string) => void;
   removeAll: () => void;
 }
 
@@ -16,17 +16,28 @@ const useCart = create(
       items: [],
       addItem: (data: Product) => {
         const curentItems = get().items;
-        const existingItems = curentItems.find((item) => item.id === data.id);
-        if (existingItems) {
-          return toast("Item already in cart.");
+        const variant=`${data.id}-${data.color}-${data.size}`
+        const existingItem = curentItems.find((item) => item.id === data.id && item.variant===variant);
+        if (existingItem) {
+          existingItem.quantity += 1;
+          set({
+            items: [
+              ...curentItems.filter((item) => item.id !== data.id),
+              existingItem,
+            ],
+          });
+        } else {
+          const variant=`${data.id}-${data.color}-${data.size}`
+          set({ items: [...get().items, { ...data, quantity: 1, variant }] });
         }
-
-        set({ items: [...get().items, data] });
 
         toast.success("Item added to cart.");
       },
-      removeItem: (id: string) => {
-        set({ items: [...get().items.filter((item) => item.id !== id)] });
+      removeItem: (id: string, variant:string) => {
+        const curentItems = get().items;
+        const existingItem = curentItems.find((item) => item.id === id && item.variant===variant);
+
+        set({ items: [...get().items.filter((item) => item.variant !== existingItem?.variant)] });
         toast.success("Item removed to cart.");
       },
       removeAll: () => {

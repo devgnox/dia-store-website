@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/types";
+import { Product, ProductCart } from "@/types";
 import React from "react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -10,7 +10,7 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ICartItemProp {
-  data: Product;
+  data: ProductCart;
 }
 
 const CartItem: React.FC<ICartItemProp> = ({ data }) => {
@@ -18,7 +18,7 @@ const CartItem: React.FC<ICartItemProp> = ({ data }) => {
   const router = useRouter();
 
   const onRemove = () => {
-    cart.removeItem(data.id);
+    cart.removeItem(data.id, data.variant);
   };
 
   return (
@@ -48,6 +48,9 @@ const CartItem: React.FC<ICartItemProp> = ({ data }) => {
             <p className="text-gray-500">{data?.color?.name}</p>
             <p className="text-gray-500 ml-4 border-1 border-gray-200 pl-4">
               {data?.size?.name}
+            </p>
+            <p className="text-gray-500 ml-4 border-1 border-gray-200 pl-4">
+              Quantity: {data?.quantity}
             </p>
           </div>
           <Currency value={data.price} />

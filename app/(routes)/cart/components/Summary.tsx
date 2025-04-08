@@ -23,10 +23,10 @@ const Summary: React.FC<ISummaryProps> = ({}) => {
     if (searchParams.get("canceled")) {
       toast.error("Something went wrong");
     }
-  }, [searchParams, removeAll]);
+  }, [searchParams]);
 
   const totalPrice = items.reduce((total, item) => {
-    return total + Number(item.price);
+    return total + Number(item.price) * Number(item.quantity);
   }, 0);
 
   const onCheckout = async () => {
